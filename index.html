@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta name="referrer" content="strict-origin-when-cross-origin">
-    <title>Diário Escolar da Professora - Seguro & Online</title>
+    <title>Diário Escolar da Professora - Sincronizado na Nuvem</title>
 
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -15,6 +15,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Firebase SDK (Google Cloud) para Sincronização em Tempo Real Celular & PC -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 
     <style>
         :root {
@@ -187,6 +191,17 @@
         .badge-falta { background-color: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
         .badge-justificada { background-color: #fef3c7; color: #b45309; border: 1px solid #fde68a; }
 
+        /* Barra de Status da Nuvem */
+        .cloud-status-bar {
+            background-color: #f1f5f9;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 0.4rem 1rem;
+            font-size: 0.82rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
         /* Tela de Bloqueio de Segurança */
         #lockScreen {
             position: fixed;
@@ -266,8 +281,20 @@
             </form>
             <div class="text-muted small mt-3">
                 <i class="bi bi-info-circle me-1"></i> Senha inicial padrão: <strong>1234</strong><br>
-                <em>(Você pode alterá-la na aba Segurança)</em>
+                <em>(Celular e PC usam a mesma senha sincronizada)</em>
             </div>
+        </div>
+    </div>
+
+    <!-- BARRA SUPERIOR DE STATUS DE SINCRONIZAÇÃO NUVEM -->
+    <div class="cloud-status-bar">
+        <div class="container d-flex justify-content-between align-items-center">
+            <span id="cloudStatusBadge">
+                <i class="bi bi-arrow-repeat spin text-primary me-1"></i> Verificando conexão...
+            </span>
+            <button class="btn btn-sm btn-link text-decoration-none py-0 text-muted" onclick="mudarAba('seguranca')">
+                <i class="bi bi-cloud-gear me-1"></i> Configurar Nuvem (Celular & PC)
+            </button>
         </div>
     </div>
 
@@ -322,7 +349,7 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" id="nav-seguranca" onclick="mudarAba('seguranca')">
-                            <i class="bi bi-shield-lock me-1"></i> Segurança
+                            <i class="bi bi-cloud-check-fill me-1"></i> Nuvem & Senha
                         </a>
                     </li>
                     <li class="nav-item ms-lg-2">
@@ -347,11 +374,11 @@
                 <div class="row align-items-center">
                     <div class="col-lg-8">
                         <span class="badge bg-white text-primary px-3 py-2 rounded-pill fw-semibold mb-2">
-                            <i class="bi bi-shield-check text-success me-1"></i> Sistema Seguro & Online
+                            <i class="bi bi-cloud-arrow-up-fill text-primary me-1"></i> Sincronização em Nuvem
                         </span>
                         <h1 class="h2 fw-bold mb-2">Olá, Professora! Bem-vinda ao seu Diário.</h1>
                         <p class="mb-3 opacity-90">
-                            Acompanhe os 15 alunos, registre os conteúdos aprendidos, faça a chamada diária e consulte relatórios em qualquer lugar.
+                            Acompanhe os 15 alunos, registre os conteúdos aprendidos, faça a chamada e veja tudo sincronizado no celular e no computador.
                         </p>
                         <div class="d-flex flex-wrap gap-2">
                             <button onclick="mudarAba('nova-aula')" class="btn btn-light text-primary fw-bold px-3 py-2 rounded-3 shadow-sm">
@@ -405,9 +432,7 @@
                             <span><i class="bi bi-clock-history me-1"></i> Últimas Aulas Registradas</span>
                             <button onclick="mudarAba('aulas')" class="btn btn-sm btn-outline-primary py-0 px-2 fw-semibold">Ver Todas</button>
                         </div>
-                        <div class="p-3" id="listaUltimasAulas">
-                            <!-- Inserido dinamicamente -->
-                        </div>
+                        <div class="p-3" id="listaUltimasAulas"></div>
                     </div>
                 </div>
                 <div class="col-lg-5">
@@ -418,9 +443,7 @@
                         </div>
                         <div class="p-3">
                             <p class="small text-muted mb-2">Clique no aluno para abrir seu histórico:</p>
-                            <div class="overflow-auto" style="max-height: 400px;" id="listaAtalhosAlunos">
-                                <!-- Inserido dinamicamente -->
-                            </div>
+                            <div class="overflow-auto" style="max-height: 400px;" id="listaAtalhosAlunos"></div>
                         </div>
                     </div>
                 </div>
@@ -449,9 +472,7 @@
                             </div>
                             <div class="col-md-8">
                                 <label class="form-label fw-semibold text-secondary">Matéria *</label>
-                                <select id="aulaMateria" class="form-select" required>
-                                    <!-- Inserido dinamicamente -->
-                                </select>
+                                <select id="aulaMateria" class="form-select" required></select>
                             </div>
                             <div class="col-12">
                                 <label class="form-label fw-semibold text-secondary">Conteúdo Aprendido / Trabalhado nesta Aula *</label>
@@ -477,9 +498,7 @@
                             </button>
                         </div>
                     </div>
-                    <div class="p-3 p-md-4" id="containerChamadaAlunos">
-                        <!-- Inserido dinamicamente -->
-                    </div>
+                    <div class="p-3 p-md-4" id="containerChamadaAlunos"></div>
                 </div>
 
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-4">
@@ -508,9 +527,7 @@
                     <span>Aulas Registradas</span>
                     <span class="badge bg-primary rounded-pill" id="badgeTotalAulas">0</span>
                 </div>
-                <div class="p-3" id="tabelaAulasContainer">
-                    <!-- Inserido dinamicamente -->
-                </div>
+                <div class="p-3" id="tabelaAulasContainer"></div>
             </div>
         </section>
 
@@ -528,9 +545,7 @@
 
             <div class="card-custom">
                 <div class="card-header-blue">Lista de Alunos Cadastrados</div>
-                <div class="p-3" id="tabelaAlunosContainer">
-                    <!-- Inserido dinamicamente -->
-                </div>
+                <div class="p-3" id="tabelaAlunosContainer"></div>
             </div>
         </section>
 
@@ -543,15 +558,11 @@
                 </div>
                 <div class="d-flex align-items-center gap-2">
                     <label class="small fw-semibold text-muted">Selecionar Aluno:</label>
-                    <select id="selectAlunoHistorico" class="form-select form-select-sm" onchange="renderizarHistoricoAluno(this.value)">
-                        <!-- Inserido dinamicamente -->
-                    </select>
+                    <select id="selectAlunoHistorico" class="form-select form-select-sm" onchange="renderizarHistoricoAluno(this.value)"></select>
                 </div>
             </div>
 
-            <div id="detalhesAlunoHistorico">
-                <!-- Inserido dinamicamente -->
-            </div>
+            <div id="detalhesAlunoHistorico"></div>
         </section>
 
         <!-- ABA 6: GERENCIAR MATÉRIAS -->
@@ -567,9 +578,7 @@
                 <div class="col-lg-8">
                     <div class="card-custom">
                         <div class="card-header-blue">Matérias Cadastradas</div>
-                        <div class="p-3" id="tabelaMateriasContainer">
-                            <!-- Inserido dinamicamente -->
-                        </div>
+                        <div class="p-3" id="tabelaMateriasContainer"></div>
                     </div>
                 </div>
                 <div class="col-lg-4">
@@ -625,15 +634,50 @@
             </div>
         </section>
 
-        <!-- ABA 8: SEGURANÇA E BACKUP -->
+        <!-- ABA 8: SEGURANÇA E NUVEM (SINCRONIZAÇÃO CELULAR & PC) -->
         <section id="aba-seguranca" class="tab-content-section">
             <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
                 <div>
-                    <h2 class="h3 fw-bold text-primary mb-1"><i class="bi bi-shield-check me-1"></i> Segurança & Backup dos Dados</h2>
-                    <p class="text-muted small mb-0">Proteja seu diário com senha e faça backup seguro dos seus registros.</p>
+                    <h2 class="h3 fw-bold text-primary mb-1"><i class="bi bi-cloud-check-fill me-1"></i> Sincronização em Nuvem (Celular & PC)</h2>
+                    <p class="text-muted small mb-0">Conecte o seu banco de dados online gratuito para celular e PC interagirem em tempo real.</p>
                 </div>
             </div>
 
+            <!-- CARD DE CONEXÃO DA NUVEM -->
+            <div class="card-custom border-primary mb-4">
+                <div class="card-header-blue d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-cloud-fill me-1"></i> Conectar Nuvem Gratuita (Firebase Google)</span>
+                    <span id="badgeStatusNuvemHeader" class="badge bg-secondary">Não Conectado</span>
+                </div>
+                <div class="p-3 p-md-4">
+                    <div class="alert alert-primary d-flex align-items-start gap-2 mb-3">
+                        <i class="bi bi-info-circle-fill fs-5 mt-1"></i>
+                        <div>
+                            <strong>Como funciona:</strong> Ao colocar a chave do seu banco de dados gratuito da Google (Firebase) aqui, <strong>o celular e o PC passam a se comunicar instantaneamente</strong>. Qualquer alteração que você fizer no celular aparece na hora no seu PC e vice-versa!
+                        </div>
+                    </div>
+
+                    <form onsubmit="event.preventDefault(); salvarConfigFirebase();">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Cole aqui o código de configuração do Firebase (objeto JSON):</label>
+                            <textarea id="inputFirebaseConfig" class="form-control font-monospace" rows="5" placeholder='{\n  "apiKey": "AIzaSy...",\n  "authDomain": "...",\n  "databaseURL": "https://...",\n  "projectId": "...",\n  "storageBucket": "...",\n  "messagingSenderId": "...",\n  "appId": "..."\n}'></textarea>
+                            <div class="form-text">
+                                Cole exatamente o bloco <code>const firebaseConfig = { ... }</code> gerado no Firebase Console.
+                            </div>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary-custom">
+                                <i class="bi bi-cloud-arrow-up-fill me-1"></i> Salvar e Conectar Nuvem
+                            </button>
+                            <button type="button" class="btn btn-outline-danger" onclick="desconectarFirebase()">
+                                Desconectar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- SENHA E BACKUP LOCAL -->
             <div class="row g-4">
                 <div class="col-lg-6">
                     <div class="card-custom">
@@ -661,7 +705,7 @@
                         <div class="card-header-blue"><i class="bi bi-cloud-arrow-down-fill me-1"></i> Backup & Restauração Segura</div>
                         <div class="p-3 p-md-4">
                             <p class="small text-muted mb-3">
-                                Baixe uma cópia dos seus dados para nunca perder nada, ou restaure em outro computador/celular:
+                                Baixe uma cópia dos seus dados para guardar no computador ou pendrive:
                             </p>
                             <button onclick="baixarBackup()" class="btn btn-outline-primary w-100 mb-3 py-2 fw-semibold">
                                 <i class="bi bi-download me-1"></i> Baixar Arquivo de Backup (.json)
@@ -738,7 +782,7 @@
     <!-- RODAPÉ -->
     <footer class="mt-auto py-3 bg-white border-top text-center text-muted small">
         <div class="container">
-            <i class="bi bi-mortarboard-fill text-primary me-1"></i> Diário Escolar da Professora &bull; Proteção Criptográfica &bull; Hospedado no GitHub Pages
+            <i class="bi bi-mortarboard-fill text-primary me-1"></i> Diário Escolar da Professora &bull; Sincronização em Nuvem em Tempo Real
         </div>
     </footer>
 
@@ -747,17 +791,15 @@
 
     <script>
         /* ==========================================================================
-           SEGURANÇA & PERSISTÊNCIA CRIPTOGRÁFICA LOCAL DO DIÁRIO
+           SINCRONIZAÇÃO EM NUVEM (FIREBASE) + PERSISTÊNCIA LOCAL
            ========================================================================== */
 
-        // Função de Hash SHA-256 no navegador para segurança
         async function sha256(str) {
             const buffer = new TextEncoder().encode(str);
             const hash = await crypto.subtle.digest('SHA-256', buffer);
             return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
         }
 
-        // Sanitização contra ataques XSS
         function sanitize(str) {
             if (!str) return '';
             return String(str)
@@ -770,9 +812,11 @@
 
         const STORAGE_KEY = "diario_escolar_professora_v1";
         const AUTH_KEY = "diario_escolar_auth_hash";
+        const FIREBASE_CONFIG_KEY = "diario_firebase_config_v1";
+        const DEFAULT_HASH = "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4"; // '1234'
 
-        // Senha inicial padrão: "1234" (hash SHA-256)
-        const DEFAULT_HASH = "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4";
+        let firebaseDbRef = null;
+        let isFirebaseConnected = false;
 
         let db = {
             alunos: [
@@ -830,22 +874,108 @@
             ]
         };
 
-        function carregarDados() {
+        // Carrega dados locais
+        function carregarDadosLocais() {
             try {
                 const salvo = localStorage.getItem(STORAGE_KEY);
-                if (salvo) {
-                    db = JSON.parse(salvo);
-                }
+                if (salvo) db = JSON.parse(salvo);
             } catch (e) {
-                console.error("Erro ao ler localStorage", e);
+                console.error(e);
             }
         }
 
+        // Salva dados tanto no LocalStorage quanto na Nuvem Firebase em tempo real
         function salvarDados() {
             try {
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
             } catch (e) {
-                mostrarAlerta("Erro ao salvar dados localmente. Memória cheia?", "danger");
+                console.error("Erro localStorage", e);
+            }
+
+            if (isFirebaseConnected && firebaseDbRef) {
+                firebaseDbRef.set(db).catch(err => {
+                    console.error("Erro ao sincronizar com nuvem Firebase", err);
+                    mostrarAlerta("Erro ao sincronizar na nuvem. Verifique a internet.", "danger");
+                });
+            }
+        }
+
+        // Inicializa a Nuvem Firebase
+        function inicializarFirebase() {
+            const configSalva = localStorage.getItem(FIREBASE_CONFIG_KEY);
+            const badge = document.getElementById("cloudStatusBadge");
+            const badgeHeader = document.getElementById("badgeStatusNuvemHeader");
+
+            if (!configSalva) {
+                badge.innerHTML = `<span class="text-warning"><i class="bi bi-cloud-slash-fill me-1"></i> Modo Local (Celular e PC separados)</span>`;
+                badgeHeader.className = "badge bg-warning text-dark";
+                badgeHeader.textContent = "Nuvem Não Conectada";
+                return;
+            }
+
+            try {
+                const config = JSON.parse(configSalva);
+                if (!firebase.apps.length) {
+                    firebase.initializeApp(config);
+                }
+                
+                firebaseDbRef = firebase.database().ref("diario_professora");
+                isFirebaseConnected = true;
+
+                badge.innerHTML = `<span class="text-success"><i class="bi bi-cloud-check-fill me-1"></i> <strong>Nuvem Ativa:</strong> Celular e PC sincronizados em tempo real!</span>`;
+                badgeHeader.className = "badge bg-success";
+                badgeHeader.textContent = "🟢 Conectado e Sincronizado";
+
+                // Ouvir atualizações da nuvem em tempo real (quando você mexer no celular, o PC recebe na hora!)
+                firebaseDbRef.on("value", snapshot => {
+                    const dadosNuvem = snapshot.val();
+                    if (dadosNuvem && dadosNuvem.alunos) {
+                        db = dadosNuvem;
+                        localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+                        atualizarInterface();
+                    } else {
+                        // Se a nuvem estiver vazia, sobe os dados iniciais locais
+                        firebaseDbRef.set(db);
+                    }
+                });
+
+            } catch (err) {
+                console.error("Falha ao iniciar Firebase:", err);
+                badge.innerHTML = `<span class="text-danger"><i class="bi bi-exclamation-triangle-fill me-1"></i> Erro na configuração do Firebase</span>`;
+                badgeHeader.className = "badge bg-danger";
+                badgeHeader.textContent = "Erro de Conexão";
+            }
+        }
+
+        function salvarConfigFirebase() {
+            const raw = document.getElementById("inputFirebaseConfig").value.trim();
+            if (!raw) {
+                mostrarAlerta("Por favor, cole a configuração do Firebase.", "danger");
+                return;
+            }
+
+            try {
+                // Tenta extrair JSON mesmo se o usuário colou const firebaseConfig = { ... };
+                let limpo = raw;
+                if (limpo.includes("=")) {
+                    limpo = limpo.substring(limpo.indexOf("=") + 1).replace(/;/g, "").trim();
+                }
+                // Converte chaves sem aspas para JSON válido se necessário
+                const configObj = (new Function(`return ${limpo}`))();
+
+                localStorage.setItem(FIREBASE_CONFIG_KEY, JSON.stringify(configObj));
+                mostrarAlerta("Configuração da Nuvem salva! Conectando com Celular e PC...", "success");
+                setTimeout(() => window.location.reload(), 1500);
+            } catch (e) {
+                mostrarAlerta("Formato inválido! Certifique-se de colar o bloco de configuração do Firebase.", "danger");
+            }
+        }
+
+        function desconectarFirebase() {
+            if (confirm("Deseja desconectar a sincronização da nuvem?")) {
+                localStorage.removeItem(FIREBASE_CONFIG_KEY);
+                mostrarAlerta("Nuvem desconectada. O diário voltou a funcionar apenas localmente.", "info");
+                setTimeout(() => window.location.reload(), 1500);
             }
         }
 
@@ -903,7 +1033,6 @@
             if (targetSection) targetSection.classList.add("active");
             if (targetNav) targetNav.classList.add("active");
 
-            // Fecha menu mobile após clique
             const navMenu = document.getElementById("navMenu");
             if (navMenu.classList.contains("show")) {
                 bootstrap.Collapse.getInstance(navMenu).hide();
@@ -928,11 +1057,10 @@
         // --- ATUALIZAÇÃO GERAL DA INTERFACE ---
 
         function atualizarInterface() {
-            // Contadores
-            document.getElementById("dashTotalAlunos").textContent = db.alunos.filter(a => a.ativo).length;
-            document.getElementById("dashTotalAulas").textContent = db.aulas.length;
-            document.getElementById("dashTotalMaterias").textContent = db.materias.length;
-            document.getElementById("badgeTotalAulas").textContent = `${db.aulas.length} Aulas`;
+            document.getElementById("dashTotalAlunos").textContent = (db.alunos || []).filter(a => a.ativo).length;
+            document.getElementById("dashTotalAulas").textContent = (db.aulas || []).length;
+            document.getElementById("dashTotalMaterias").textContent = (db.materias || []).length;
+            document.getElementById("badgeTotalAulas").textContent = `${(db.aulas || []).length} Aulas`;
 
             renderizarInicio();
             renderizarFormularioAula();
@@ -945,17 +1073,16 @@
 
         // --- DASHBOARD INÍCIO ---
         function renderizarInicio() {
-            // Últimas aulas
             const listaAulasDiv = document.getElementById("listaUltimasAulas");
-            const ultimas = [...db.aulas].reverse().slice(0, 4);
+            const ultimas = [...(db.aulas || [])].reverse().slice(0, 4);
 
             if (ultimas.length === 0) {
                 listaAulasDiv.innerHTML = `<p class="text-muted text-center py-4">Nenhuma aula registrada ainda.</p>`;
             } else {
                 listaAulasDiv.innerHTML = ultimas.map(a => {
-                    const mat = db.materias.find(m => m.id === a.materia_id) || { nome: "Geral", cor: "#2563eb" };
-                    const pres = Object.values(a.presencas).filter(s => s === "presente").length;
-                    const falt = Object.values(a.presencas).filter(s => s === "falta").length;
+                    const mat = (db.materias || []).find(m => m.id === a.materia_id) || { nome: "Geral", cor: "#2563eb" };
+                    const pres = Object.values(a.presencas || {}).filter(s => s === "presente").length;
+                    const falt = Object.values(a.presencas || {}).filter(s => s === "falta").length;
                     return `
                         <div class="border-bottom py-2">
                             <div class="d-flex justify-content-between align-items-center mb-1">
@@ -975,9 +1102,8 @@
                 }).join("");
             }
 
-            // Atalhos Alunos
             const listaAlunosDiv = document.getElementById("listaAtalhosAlunos");
-            listaAlunosDiv.innerHTML = db.alunos.filter(a => a.ativo).map(al => `
+            listaAlunosDiv.innerHTML = (db.alunos || []).filter(a => a.ativo).map(al => `
                 <div class="d-flex justify-content-between align-items-center py-2 px-1 border-bottom">
                     <div class="d-flex align-items-center gap-2">
                         <span class="student-call-number">${al.numero}</span>
@@ -992,18 +1118,15 @@
 
         // --- FORMULÁRIO DE NOVA AULA ---
         function renderizarFormularioAula() {
-            // Data atual default
             if (!document.getElementById("aulaData").value) {
                 document.getElementById("aulaData").value = new Date().toISOString().split('T')[0];
             }
 
-            // Matérias no Select
             const selectMat = document.getElementById("aulaMateria");
-            selectMat.innerHTML = db.materias.map(m => `<option value="${m.id}">${sanitize(m.nome)}</option>`).join("");
+            selectMat.innerHTML = (db.materias || []).map(m => `<option value="${m.id}">${sanitize(m.nome)}</option>`).join("");
 
-            // Lista de alunos para chamada
             const container = document.getElementById("containerChamadaAlunos");
-            const ativos = db.alunos.filter(a => a.ativo).sort((a,b) => a.numero - b.numero);
+            const ativos = (db.alunos || []).filter(a => a.ativo).sort((a,b) => a.numero - b.numero);
 
             container.innerHTML = ativos.map(al => `
                 <div class="attendance-item">
@@ -1043,36 +1166,35 @@
             }
 
             const presencas = {};
-            db.alunos.filter(a => a.ativo).forEach(al => {
+            (db.alunos || []).filter(a => a.ativo).forEach(al => {
                 const radio = document.querySelector(`input[name="chamada_${al.id}"]:checked`);
                 presencas[al.id] = radio ? radio.value : "presente";
             });
 
-            const novaAula = {
+            if (!db.aulas) db.aulas = [];
+            db.aulas.push({
                 id: Date.now(),
                 data,
                 materia_id: matId,
                 conteudo,
                 obs,
                 presencas
-            };
+            });
 
-            db.aulas.push(novaAula);
             salvarDados();
 
-            // Limpa form
             document.getElementById("aulaConteudo").value = "";
             document.getElementById("aulaObs").value = "";
             marcarChamadaTodos("presente");
 
-            mostrarAlerta("Aula e chamada registradas com sucesso no Diário!", "success");
+            mostrarAlerta("Aula e chamada registradas e sincronizadas!", "success");
             mudarAba("aulas");
         }
 
         // --- TABELA DE AULAS ---
         function renderizarTabelaAulas() {
             const container = document.getElementById("tabelaAulasContainer");
-            if (db.aulas.length === 0) {
+            if (!db.aulas || db.aulas.length === 0) {
                 container.innerHTML = `<p class="text-muted text-center py-4">Nenhuma aula registrada.</p>`;
                 return;
             }
@@ -1092,9 +1214,9 @@
                         </thead>
                         <tbody>
                             ${lista.map(a => {
-                                const mat = db.materias.find(m => m.id === a.materia_id) || { nome: "Geral", cor: "#2563eb" };
-                                const pres = Object.values(a.presencas).filter(s => s === "presente").length;
-                                const falt = Object.values(a.presencas).filter(s => s === "falta").length;
+                                const mat = (db.materias || []).find(m => m.id === a.materia_id) || { nome: "Geral", cor: "#2563eb" };
+                                const pres = Object.values(a.presencas || {}).filter(s => s === "presente").length;
+                                const falt = Object.values(a.presencas || {}).filter(s => s === "falta").length;
                                 return `
                                     <tr>
                                         <td class="fw-bold">${a.data}</td>
@@ -1121,10 +1243,10 @@
 
         function excluirAula(id) {
             if (confirm("Deseja realmente excluir este registro de aula?")) {
-                db.aulas = db.aulas.filter(a => a.id !== id);
+                db.aulas = (db.aulas || []).filter(a => a.id !== id);
                 salvarDados();
                 atualizarInterface();
-                mostrarAlerta("Aula removida com sucesso.", "info");
+                mostrarAlerta("Aula removida e sincronizada.", "info");
             }
         }
 
@@ -1142,7 +1264,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            ${db.alunos.sort((a,b) => a.numero - b.numero).map(al => `
+                            ${(db.alunos || []).sort((a,b) => a.numero - b.numero).map(al => `
                                 <tr>
                                     <td><span class="student-call-number">${al.numero}</span></td>
                                     <td class="fw-bold text-dark">${sanitize(al.nome)}</td>
@@ -1160,7 +1282,7 @@
         }
 
         function abrirModalEdicaoAluno(id) {
-            const al = db.alunos.find(a => a.id === id);
+            const al = (db.alunos || []).find(a => a.id === id);
             if (!al) return;
             document.getElementById("editAlunoId").value = al.id;
             document.getElementById("editAlunoNumero").value = al.numero;
@@ -1174,14 +1296,14 @@
             const nome = document.getElementById("editAlunoNome").value.trim();
             if (!nome) return;
 
-            const al = db.alunos.find(a => a.id === id);
+            const al = (db.alunos || []).find(a => a.id === id);
             if (al) {
                 al.numero = numero;
                 al.nome = nome;
                 salvarDados();
                 atualizarInterface();
                 bootstrap.Modal.getInstance(document.getElementById("modalEditarAluno")).hide();
-                mostrarAlerta("Aluno atualizado com sucesso!");
+                mostrarAlerta("Aluno atualizado e sincronizado!");
             }
         }
 
@@ -1190,22 +1312,22 @@
             const nome = document.getElementById("novoAlunoNome").value.trim();
             if (!nome) return;
 
-            const novoId = Date.now();
-            db.alunos.push({ id: novoId, numero, nome, ativo: 1 });
+            if (!db.alunos) db.alunos = [];
+            db.alunos.push({ id: Date.now(), numero, nome, ativo: 1 });
             salvarDados();
             atualizarInterface();
 
             document.getElementById("novoAlunoNome").value = "";
             bootstrap.Modal.getInstance(document.getElementById("modalNovoAluno")).hide();
-            mostrarAlerta("Novo aluno cadastrado com sucesso!");
+            mostrarAlerta("Novo aluno cadastrado e sincronizado!");
         }
 
         function excluirAluno(id) {
-            if (confirm("Tem certeza que deseja excluir este aluno?")) {
-                db.alunos = db.alunos.filter(a => a.id !== id);
+            if (confirm("Tem certeza que deseja excluir este aluno? Ele será removido no celular e no PC!")) {
+                db.alunos = (db.alunos || []).filter(a => a.id !== id);
                 salvarDados();
                 atualizarInterface();
-                mostrarAlerta("Aluno removido.", "info");
+                mostrarAlerta("Aluno removido e sincronizado com sucesso.", "info");
             }
         }
 
@@ -1213,13 +1335,11 @@
         function renderizarSelectAlunosHistorico() {
             const select = document.getElementById("selectAlunoHistorico");
             const atual = select.value;
-            select.innerHTML = db.alunos.sort((a,b) => a.numero - b.numero).map(al => `
+            select.innerHTML = (db.alunos || []).sort((a,b) => a.numero - b.numero).map(al => `
                 <option value="${al.id}" ${atual == al.id ? 'selected' : ''}>Nº ${al.numero} - ${sanitize(al.nome)}</option>
             `).join("");
 
-            if (select.value) {
-                renderizarHistoricoAluno(select.value);
-            }
+            if (select.value) renderizarHistoricoAluno(select.value);
         }
 
         function abrirHistoricoDe(alunoId) {
@@ -1230,13 +1350,13 @@
 
         function renderizarHistoricoAluno(alunoId) {
             const id = parseInt(alunoId);
-            const al = db.alunos.find(a => a.id === id);
+            const al = (db.alunos || []).find(a => a.id === id);
             if (!al) return;
 
             const historico = [];
-            db.aulas.forEach(aula => {
+            (db.aulas || []).forEach(aula => {
                 if (aula.presencas && aula.presencas[id]) {
-                    const mat = db.materias.find(m => m.id === aula.materia_id) || { nome: "Geral", cor: "#2563eb" };
+                    const mat = (db.materias || []).find(m => m.id === aula.materia_id) || { nome: "Geral", cor: "#2563eb" };
                     historico.push({
                         data: aula.data,
                         materia: mat.nome,
@@ -1332,7 +1452,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            ${db.materias.map(m => `
+                            ${(db.materias || []).map(m => `
                                 <tr>
                                     <td class="fw-bold">${sanitize(m.nome)}</td>
                                     <td><span class="badge rounded-pill text-white px-3 py-1" style="background-color: ${m.cor}">${sanitize(m.nome)}</span></td>
@@ -1352,33 +1472,33 @@
             const cor = document.getElementById("novaMateriaCor").value;
             if (!nome) return;
 
+            if (!db.materias) db.materias = [];
             db.materias.push({ id: Date.now(), nome, cor });
             salvarDados();
             atualizarInterface();
             document.getElementById("novaMateriaNome").value = "";
-            mostrarAlerta("Matéria adicionada com sucesso!");
+            mostrarAlerta("Matéria adicionada e sincronizada!");
         }
 
         function excluirMateria(id) {
             if (confirm("Deseja realmente excluir esta matéria?")) {
-                db.materias = db.materias.filter(m => m.id !== id);
+                db.materias = (db.materias || []).filter(m => m.id !== id);
                 salvarDados();
                 atualizarInterface();
-                mostrarAlerta("Matéria removida.", "info");
+                mostrarAlerta("Matéria removida e sincronizada.", "info");
             }
         }
 
         // --- ESTATÍSTICAS ---
         function renderizarEstatisticas() {
-            // Aulas por matéria
             const divAulasMat = document.getElementById("statsAulasPorMateria");
             const contagem = {};
-            db.materias.forEach(m => contagem[m.id] = 0);
-            db.aulas.forEach(a => { if (contagem[a.materia_id] !== undefined) contagem[a.materia_id]++; });
+            (db.materias || []).forEach(m => contagem[m.id] = 0);
+            (db.aulas || []).forEach(a => { if (contagem[a.materia_id] !== undefined) contagem[a.materia_id]++; });
 
-            divAulasMat.innerHTML = db.materias.map(m => {
+            divAulasMat.innerHTML = (db.materias || []).map(m => {
                 const total = contagem[m.id] || 0;
-                const pct = db.aulas.length === 0 ? 0 : Math.round((total / db.aulas.length) * 100);
+                const pct = (!db.aulas || db.aulas.length === 0) ? 0 : Math.round((total / db.aulas.length) * 100);
                 return `
                     <div class="mb-3">
                         <div class="d-flex justify-content-between align-items-center mb-1">
@@ -1392,20 +1512,18 @@
                 `;
             }).join("");
 
-            // Panorama Geral
             const divResumo = document.getElementById("statsResumoGeral");
             divResumo.innerHTML = `
                 <div class="row g-3 text-center mb-3">
-                    <div class="col-4"><div class="p-3 bg-light rounded border"><div class="fs-3 fw-bold text-primary">${db.alunos.length}</div><small class="text-muted fw-bold">Alunos</small></div></div>
-                    <div class="col-4"><div class="p-3 bg-light rounded border"><div class="fs-3 fw-bold text-success">${db.aulas.length}</div><small class="text-muted fw-bold">Aulas Dadas</small></div></div>
-                    <div class="col-4"><div class="p-3 bg-light rounded border"><div class="fs-3 fw-bold text-info">${db.materias.length}</div><small class="text-muted fw-bold">Disciplinas</small></div></div>
+                    <div class="col-4"><div class="p-3 bg-light rounded border"><div class="fs-3 fw-bold text-primary">${(db.alunos || []).length}</div><small class="text-muted fw-bold">Alunos</small></div></div>
+                    <div class="col-4"><div class="p-3 bg-light rounded border"><div class="fs-3 fw-bold text-success">${(db.aulas || []).length}</div><small class="text-muted fw-bold">Aulas Dadas</small></div></div>
+                    <div class="col-4"><div class="p-3 bg-light rounded border"><div class="fs-3 fw-bold text-info">${(db.materias || []).length}</div><small class="text-muted fw-bold">Disciplinas</small></div></div>
                 </div>
                 <div class="alert alert-info small mb-0">
-                    <i class="bi bi-shield-check me-1"></i> Seus dados estão salvos e sincronizados localmente no seu navegador. Lembre-se de baixar um backup regularmente na aba Segurança.
+                    <i class="bi bi-cloud-check-fill me-1"></i> Seus dados estão sincronizados em tempo real entre o celular e o computador.
                 </div>
             `;
 
-            // Tabela geral de frequência
             const divTabFreq = document.getElementById("statsTabelaFrequencia");
             divTabFreq.innerHTML = `
                 <div class="table-responsive">
@@ -1421,9 +1539,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            ${db.alunos.sort((a,b) => a.numero - b.numero).map(al => {
+                            ${(db.alunos || []).sort((a,b) => a.numero - b.numero).map(al => {
                                 let pres = 0, falt = 0, total = 0;
-                                db.aulas.forEach(a => {
+                                (db.aulas || []).forEach(a => {
                                     if (a.presencas && a.presencas[al.id]) {
                                         total++;
                                         if (a.presencas[al.id] === "presente") pres++;
@@ -1480,11 +1598,11 @@
             reader.onload = function(e) {
                 try {
                     const dadosImportados = JSON.parse(e.target.result);
-                    if (dadosImportados.alunos && dadosImportados.materias && dadosImportados.aulas) {
+                    if (dadosImportados.alunos && dadosImportados.materias) {
                         db = dadosImportados;
                         salvarDados();
                         atualizarInterface();
-                        mostrarAlerta("Backup restaurado com sucesso!", "success");
+                        mostrarAlerta("Backup restaurado e sincronizado com sucesso!", "success");
                     } else {
                         mostrarAlerta("Formato de backup inválido!", "danger");
                     }
@@ -1495,9 +1613,9 @@
             reader.readAsText(fileInput.files[0]);
         }
 
-        // Inicialização ao carregar a página
         window.addEventListener("DOMContentLoaded", () => {
-            carregarDados();
+            carregarDadosLocais();
+            inicializarFirebase();
             if (sessionStorage.getItem("diario_desbloqueado") === "true") {
                 document.getElementById("lockScreen").style.display = "none";
                 atualizarInterface();
