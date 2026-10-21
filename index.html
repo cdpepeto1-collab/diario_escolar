@@ -1,0 +1,1508 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <title>Diário Escolar da Professora - Seguro & Online</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-blue: #1e40af;
+            --primary-hover: #1d4ed8;
+            --secondary-blue: #3b82f6;
+            --light-blue: #eff6ff;
+            --card-border: #e2e8f0;
+            --text-dark: #1e293b;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: var(--text-dark);
+            font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar-custom {
+            background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.15);
+            padding: 0.8rem 1rem;
+        }
+
+        .navbar-custom .navbar-brand {
+            color: #ffffff !important;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .navbar-custom .nav-link {
+            color: rgba(255, 255, 255, 0.88) !important;
+            font-weight: 500;
+            padding: 0.45rem 0.85rem !important;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .navbar-custom .nav-link:hover,
+        .navbar-custom .nav-link.active {
+            color: #ffffff !important;
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .hero-card {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 50%, #1e40af 100%);
+            color: #ffffff;
+            border-radius: 16px;
+            padding: 1.75rem;
+            box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.25);
+            margin-bottom: 1.5rem;
+        }
+
+        .card-custom {
+            background: #ffffff;
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1.25rem;
+        }
+
+        .card-header-blue {
+            background-color: var(--light-blue);
+            border-bottom: 1px solid #bfdbfe;
+            color: var(--primary-blue);
+            font-weight: 700;
+            padding: 0.85rem 1.25rem;
+            border-top-left-radius: 13px;
+            border-top-right-radius: 13px;
+        }
+
+        .stat-card {
+            background: #ffffff;
+            border-radius: 14px;
+            border: 1px solid #e2e8f0;
+            padding: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.04);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            background: var(--light-blue);
+            color: var(--primary-blue);
+        }
+
+        .stat-number {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--primary-blue);
+            line-height: 1.1;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #64748b;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .btn-primary-custom {
+            background-color: var(--primary-blue);
+            color: #ffffff;
+            border: none;
+            font-weight: 600;
+            border-radius: 10px;
+            padding: 0.55rem 1.1rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary-custom:hover {
+            background-color: var(--primary-hover);
+            color: #ffffff;
+            box-shadow: 0 4px 10px rgba(30, 64, 175, 0.3);
+        }
+
+        .student-call-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: var(--light-blue);
+            color: var(--primary-blue);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+
+        .attendance-item {
+            background: #ffffff;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.65rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+        }
+
+        .freq-progress {
+            height: 10px;
+            border-radius: 5px;
+            background-color: #e2e8f0;
+            overflow: hidden;
+        }
+
+        .freq-bar {
+            height: 100%;
+            border-radius: 5px;
+            transition: width 0.3s ease;
+        }
+
+        .badge-presente { background-color: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
+        .badge-falta { background-color: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
+        .badge-justificada { background-color: #fef3c7; color: #b45309; border: 1px solid #fde68a; }
+
+        /* Tela de Bloqueio de Segurança */
+        #lockScreen {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: radial-gradient(circle at top, #1e3a8a, #0f172a);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .lock-card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 2.25rem 2rem;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .tab-content-section {
+            display: none;
+        }
+        .tab-content-section.active {
+            display: block;
+            animation: fadeIn 0.25s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .attendance-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .attendance-options {
+                width: 100%;
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr;
+                margin-top: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TELA DE BLOQUEIO / SEGURANÇA DA PROFESSORA -->
+    <div id="lockScreen">
+        <div class="lock-card">
+            <div class="mb-3">
+                <div class="d-inline-flex p-3 rounded-circle bg-primary-subtle text-primary mb-2">
+                    <i class="bi bi-shield-lock-fill fs-1"></i>
+                </div>
+                <h3 class="fw-bold text-dark mb-1">Diário Escolar</h3>
+                <p class="text-muted small mb-0">Área protegida por senha da Professora</p>
+            </div>
+
+            <form id="formUnlock" onsubmit="event.preventDefault(); verificarSenha();">
+                <div class="mb-3">
+                    <label class="form-label small fw-semibold text-secondary">Digite sua senha ou PIN de acesso:</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light"><i class="bi bi-key-fill text-primary"></i></span>
+                        <input type="password" id="inputPin" class="form-control form-control-lg text-center fs-5" placeholder="Senha padrão: 1234" autocomplete="current-password" required>
+                    </div>
+                    <div id="pinError" class="text-danger small mt-2 d-none">
+                        <i class="bi bi-exclamation-circle-fill"></i> Senha incorreta! Tente novamente.
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary-custom btn-lg w-100 shadow mb-2">
+                    <i class="bi bi-unlock-fill me-1"></i> Acessar Diário
+                </button>
+            </form>
+            <div class="text-muted small mt-3">
+                <i class="bi bi-info-circle me-1"></i> Senha inicial padrão: <strong>1234</strong><br>
+                <em>(Você pode alterá-la na aba Segurança)</em>
+            </div>
+        </div>
+    </div>
+
+    <!-- BARRA DE NAVEGAÇÃO -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom sticky-top">
+        <div class="container">
+            <a class="navbar-brand" onclick="mudarAba('inicio')">
+                <i class="bi bi-journal-bookmark-fill fs-4 text-white"></i>
+                <span>Diário da Professora</span>
+            </a>
+            
+            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+                <i class="bi bi-list fs-2 text-white"></i>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navMenu">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center gap-1">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="nav-inicio" onclick="mudarAba('inicio')">
+                            <i class="bi bi-house-door me-1"></i> Início
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="nav-nova-aula" onclick="mudarAba('nova-aula')">
+                            <i class="bi bi-calendar-plus me-1"></i> Registrar Aula
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="nav-aulas" onclick="mudarAba('aulas')">
+                            <i class="bi bi-journal-text me-1"></i> Aulas Dadas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="nav-alunos" onclick="mudarAba('alunos')">
+                            <i class="bi bi-people me-1"></i> Alunos (15)
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="nav-historico" onclick="mudarAba('historico')">
+                            <i class="bi bi-person-lines-fill me-1"></i> Histórico Individual
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="nav-materias" onclick="mudarAba('materias')">
+                            <i class="bi bi-book me-1"></i> Matérias
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="nav-estatisticas" onclick="mudarAba('estatisticas')">
+                            <i class="bi bi-graph-up-arrow me-1"></i> Estatísticas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="nav-seguranca" onclick="mudarAba('seguranca')">
+                            <i class="bi bi-shield-lock me-1"></i> Segurança
+                        </a>
+                    </li>
+                    <li class="nav-item ms-lg-2">
+                        <button class="btn btn-sm btn-outline-light rounded-pill px-3" onclick="bloquearTela()" title="Bloquear tela com senha">
+                            <i class="bi bi-lock-fill"></i> Bloquear
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ÁREA DE NOTIFICAÇÕES -->
+    <div class="container mt-3" id="alertContainer"></div>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="container my-3 my-md-4">
+
+        <!-- ABA 1: INÍCIO / DASHBOARD -->
+        <section id="aba-inicio" class="tab-content-section active">
+            <div class="hero-card">
+                <div class="row align-items-center">
+                    <div class="col-lg-8">
+                        <span class="badge bg-white text-primary px-3 py-2 rounded-pill fw-semibold mb-2">
+                            <i class="bi bi-shield-check text-success me-1"></i> Sistema Seguro & Online
+                        </span>
+                        <h1 class="h2 fw-bold mb-2">Olá, Professora! Bem-vinda ao seu Diário.</h1>
+                        <p class="mb-3 opacity-90">
+                            Acompanhe os 15 alunos, registre os conteúdos aprendidos, faça a chamada diária e consulte relatórios em qualquer lugar.
+                        </p>
+                        <div class="d-flex flex-wrap gap-2">
+                            <button onclick="mudarAba('nova-aula')" class="btn btn-light text-primary fw-bold px-3 py-2 rounded-3 shadow-sm">
+                                <i class="bi bi-plus-circle-fill me-1"></i> Registrar Aula de Hoje
+                            </button>
+                            <button onclick="mudarAba('alunos')" class="btn btn-outline-light px-3 py-2 rounded-3">
+                                <i class="bi bi-people-fill me-1"></i> Ver os 15 Alunos
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 text-center d-none d-lg-block">
+                        <i class="bi bi-journal-check display-1 opacity-75"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-3 mb-4">
+                <div class="col-6 col-md-4">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="bi bi-people-fill"></i></div>
+                        <div>
+                            <div class="stat-number" id="dashTotalAlunos">15</div>
+                            <div class="stat-label">Alunos</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="bi bi-journal-bookmark-fill"></i></div>
+                        <div>
+                            <div class="stat-number" id="dashTotalAulas">0</div>
+                            <div class="stat-label">Aulas Dadas</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-4">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="bi bi-book-half"></i></div>
+                        <div>
+                            <div class="stat-number" id="dashTotalMaterias">8</div>
+                            <div class="stat-label">Matérias</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-lg-7">
+                    <div class="card-custom h-100">
+                        <div class="card-header-blue d-flex justify-content-between align-items-center">
+                            <span><i class="bi bi-clock-history me-1"></i> Últimas Aulas Registradas</span>
+                            <button onclick="mudarAba('aulas')" class="btn btn-sm btn-outline-primary py-0 px-2 fw-semibold">Ver Todas</button>
+                        </div>
+                        <div class="p-3" id="listaUltimasAulas">
+                            <!-- Inserido dinamicamente -->
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-5">
+                    <div class="card-custom h-100">
+                        <div class="card-header-blue d-flex justify-content-between align-items-center">
+                            <span><i class="bi bi-search me-1"></i> Consultar Histórico do Aluno</span>
+                            <button onclick="mudarAba('alunos')" class="btn btn-sm btn-outline-primary py-0 px-2 fw-semibold">Gerenciar</button>
+                        </div>
+                        <div class="p-3">
+                            <p class="small text-muted mb-2">Clique no aluno para abrir seu histórico:</p>
+                            <div class="overflow-auto" style="max-height: 400px;" id="listaAtalhosAlunos">
+                                <!-- Inserido dinamicamente -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ABA 2: REGISTRAR AULA & CHAMADA -->
+        <section id="aba-nova-aula" class="tab-content-section">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <div>
+                    <h2 class="h3 fw-bold text-primary mb-1">
+                        <i class="bi bi-calendar-plus me-1"></i> Registrar Dia / Aula
+                    </h2>
+                    <p class="text-muted small mb-0">Preencha o conteúdo aprendido e faça a chamada da turma.</p>
+                </div>
+            </div>
+
+            <form id="formNovaAula" onsubmit="event.preventDefault(); salvarNovaAula();">
+                <div class="card-custom mb-4">
+                    <div class="card-header-blue"><i class="bi bi-info-circle me-1"></i> 1. Informações da Aula</div>
+                    <div class="p-3 p-md-4">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold text-secondary">Data da Aula *</label>
+                                <input type="date" id="aulaData" class="form-control" required>
+                            </div>
+                            <div class="col-md-8">
+                                <label class="form-label fw-semibold text-secondary">Matéria *</label>
+                                <select id="aulaMateria" class="form-select" required>
+                                    <!-- Inserido dinamicamente -->
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold text-secondary">Conteúdo Aprendido / Trabalhado nesta Aula *</label>
+                                <textarea id="aulaConteudo" class="form-control" rows="3" placeholder="Ex: Operações com frações equivalentes; leitura coletiva do capítulo 3..." required></textarea>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold text-secondary">Observações da Professora (Opcional)</label>
+                                <input type="text" id="aulaObs" class="form-control" placeholder="Ex: Todos participaram ativamente.">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-custom mb-4">
+                    <div class="card-header-blue d-flex flex-wrap justify-content-between align-items-center gap-2">
+                        <span><i class="bi bi-check2-square me-1"></i> 2. Chamada de Presença / Falta</span>
+                        <div class="d-flex gap-2">
+                            <button type="button" class="btn btn-sm btn-success fw-semibold px-2" onclick="marcarChamadaTodos('presente')">
+                                <i class="bi bi-check-all me-1"></i> Todos Presentes
+                            </button>
+                            <button type="button" class="btn btn-sm btn-outline-danger fw-semibold px-2" onclick="marcarChamadaTodos('falta')">
+                                <i class="bi bi-x-lg me-1"></i> Todos Faltosos
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-3 p-md-4" id="containerChamadaAlunos">
+                        <!-- Inserido dinamicamente -->
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-4">
+                    <button type="button" onclick="mudarAba('inicio')" class="btn btn-outline-secondary px-4">Cancelar</button>
+                    <button type="submit" class="btn btn-primary-custom px-4 shadow">
+                        <i class="bi bi-save2-fill me-2"></i> Salvar Aula e Chamada
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- ABA 3: AULAS REGISTRADAS -->
+        <section id="aba-aulas" class="tab-content-section">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                <div>
+                    <h2 class="h3 fw-bold text-primary mb-1"><i class="bi bi-journal-text me-1"></i> Aulas Ministradas</h2>
+                    <p class="text-muted small mb-0">Histórico cronológico de todos os conteúdos trabalhados.</p>
+                </div>
+                <button onclick="mudarAba('nova-aula')" class="btn btn-primary-custom">
+                    <i class="bi bi-plus-circle me-1"></i> Nova Aula
+                </button>
+            </div>
+
+            <div class="card-custom">
+                <div class="card-header-blue d-flex justify-content-between align-items-center">
+                    <span>Aulas Registradas</span>
+                    <span class="badge bg-primary rounded-pill" id="badgeTotalAulas">0</span>
+                </div>
+                <div class="p-3" id="tabelaAulasContainer">
+                    <!-- Inserido dinamicamente -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ABA 4: GERENCIAR ALUNOS -->
+        <section id="aba-alunos" class="tab-content-section">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                <div>
+                    <h2 class="h3 fw-bold text-primary mb-1"><i class="bi bi-people-fill me-1"></i> Alunos da Turma</h2>
+                    <p class="text-muted small mb-0">Edite os nomes dos 15 alunos ou adicione novos.</p>
+                </div>
+                <button class="btn btn-primary-custom" data-bs-toggle="modal" data-bs-target="#modalNovoAluno">
+                    <i class="bi bi-person-plus-fill me-1"></i> Adicionar Aluno
+                </button>
+            </div>
+
+            <div class="card-custom">
+                <div class="card-header-blue">Lista de Alunos Cadastrados</div>
+                <div class="p-3" id="tabelaAlunosContainer">
+                    <!-- Inserido dinamicamente -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ABA 5: HISTÓRICO INDIVIDUAL DO ALUNO -->
+        <section id="aba-historico" class="tab-content-section">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                <div>
+                    <h2 class="h3 fw-bold text-primary mb-1"><i class="bi bi-person-badge-fill me-1"></i> Histórico Individual</h2>
+                    <p class="text-muted small mb-0">Consulta detalhada de frequência e conteúdos aprendidos pelo aluno.</p>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <label class="small fw-semibold text-muted">Selecionar Aluno:</label>
+                    <select id="selectAlunoHistorico" class="form-select form-select-sm" onchange="renderizarHistoricoAluno(this.value)">
+                        <!-- Inserido dinamicamente -->
+                    </select>
+                </div>
+            </div>
+
+            <div id="detalhesAlunoHistorico">
+                <!-- Inserido dinamicamente -->
+            </div>
+        </section>
+
+        <!-- ABA 6: GERENCIAR MATÉRIAS -->
+        <section id="aba-materias" class="tab-content-section">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                <div>
+                    <h2 class="h3 fw-bold text-primary mb-1"><i class="bi bi-book-half me-1"></i> Matérias da Grade</h2>
+                    <p class="text-muted small mb-0">Cadastre e personalize as disciplinas ministradas.</p>
+                </div>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-lg-8">
+                    <div class="card-custom">
+                        <div class="card-header-blue">Matérias Cadastradas</div>
+                        <div class="p-3" id="tabelaMateriasContainer">
+                            <!-- Inserido dinamicamente -->
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card-custom">
+                        <div class="card-header-blue"><i class="bi bi-plus-square me-1"></i> Nova Matéria</div>
+                        <div class="p-3">
+                            <form onsubmit="event.preventDefault(); adicionarMateria();">
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold">Nome da Disciplina</label>
+                                    <input type="text" id="novaMateriaNome" class="form-control" placeholder="Ex: Literatura" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold">Cor da Etiqueta</label>
+                                    <input type="color" id="novaMateriaCor" class="form-control form-control-color w-100" value="#2563eb">
+                                </div>
+                                <button type="submit" class="btn btn-primary-custom w-100">
+                                    <i class="bi bi-check2 me-1"></i> Salvar Matéria
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ABA 7: ESTATÍSTICAS -->
+        <section id="aba-estatisticas" class="tab-content-section">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                <div>
+                    <h2 class="h3 fw-bold text-primary mb-1"><i class="bi bi-graph-up-arrow me-1"></i> Estatísticas da Turma</h2>
+                    <p class="text-muted small mb-0">Aulas dadas por matéria e frequência geral dos alunos.</p>
+                </div>
+            </div>
+
+            <div class="row g-4 mb-4">
+                <div class="col-lg-5">
+                    <div class="card-custom h-100">
+                        <div class="card-header-blue"><i class="bi bi-pie-chart-fill me-1"></i> Aulas por Matéria</div>
+                        <div class="p-3" id="statsAulasPorMateria"></div>
+                    </div>
+                </div>
+                <div class="col-lg-7">
+                    <div class="card-custom h-100">
+                        <div class="card-header-blue"><i class="bi bi-info-circle me-1"></i> Panorama Geral</div>
+                        <div class="p-4" id="statsResumoGeral"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-custom">
+                <div class="card-header-blue"><i class="bi bi-table me-1"></i> Tabela Geral de Frequência</div>
+                <div class="p-3" id="statsTabelaFrequencia"></div>
+            </div>
+        </section>
+
+        <!-- ABA 8: SEGURANÇA E BACKUP -->
+        <section id="aba-seguranca" class="tab-content-section">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                <div>
+                    <h2 class="h3 fw-bold text-primary mb-1"><i class="bi bi-shield-check me-1"></i> Segurança & Backup dos Dados</h2>
+                    <p class="text-muted small mb-0">Proteja seu diário com senha e faça backup seguro dos seus registros.</p>
+                </div>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-lg-6">
+                    <div class="card-custom">
+                        <div class="card-header-blue"><i class="bi bi-key-fill me-1"></i> Alterar Senha de Acesso</div>
+                        <div class="p-3 p-md-4">
+                            <form onsubmit="event.preventDefault(); alterarSenha();">
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold">Senha Atual</label>
+                                    <input type="password" id="senhaAtual" class="form-control" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold">Nova Senha / PIN</label>
+                                    <input type="password" id="novaSenha" class="form-control" minlength="4" placeholder="Mínimo 4 dígitos ou caracteres" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary-custom w-100">
+                                    <i class="bi bi-check2-circle me-1"></i> Atualizar Senha de Proteção
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="card-custom">
+                        <div class="card-header-blue"><i class="bi bi-cloud-arrow-down-fill me-1"></i> Backup & Restauração Segura</div>
+                        <div class="p-3 p-md-4">
+                            <p class="small text-muted mb-3">
+                                Baixe uma cópia dos seus dados para nunca perder nada, ou restaure em outro computador/celular:
+                            </p>
+                            <button onclick="baixarBackup()" class="btn btn-outline-primary w-100 mb-3 py-2 fw-semibold">
+                                <i class="bi bi-download me-1"></i> Baixar Arquivo de Backup (.json)
+                            </button>
+
+                            <hr class="my-3">
+
+                            <label class="form-label fw-semibold small">Restaurar Diário a partir de um Backup:</label>
+                            <input type="file" id="arquivoBackup" class="form-control mb-2" accept=".json">
+                            <button onclick="restaurarBackup()" class="btn btn-outline-secondary w-100 py-2 fw-semibold">
+                                <i class="bi bi-upload me-1"></i> Restaurar Arquivo Selecionado
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- MODAL EDITAR ALUNO -->
+    <div class="modal fade" id="modalEditarAluno" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-light">
+                    <h5 class="modal-title fw-bold text-primary"><i class="bi bi-pencil-square me-1"></i> Editar Aluno</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="editAlunoId">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Número de Chamada</label>
+                        <input type="number" id="editAlunoNumero" class="form-control" required min="1">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Nome Completo</label>
+                        <input type="text" id="editAlunoNome" class="form-control" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" onclick="salvarEdicaoAluno()" class="btn btn-primary-custom">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL NOVO ALUNO -->
+    <div class="modal fade" id="modalNovoAluno" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-light">
+                    <h5 class="modal-title fw-bold text-primary"><i class="bi bi-person-plus-fill me-1"></i> Novo Aluno</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Número de Chamada</label>
+                        <input type="number" id="novoAlunoNumero" class="form-control" required min="1">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Nome Completo</label>
+                        <input type="text" id="novoAlunoNome" class="form-control" placeholder="Ex: Lucas Henrique Souza" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" onclick="adicionarAluno()" class="btn btn-primary-custom">Cadastrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RODAPÉ -->
+    <footer class="mt-auto py-3 bg-white border-top text-center text-muted small">
+        <div class="container">
+            <i class="bi bi-mortarboard-fill text-primary me-1"></i> Diário Escolar da Professora &bull; Proteção Criptográfica &bull; Hospedado no GitHub Pages
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        /* ==========================================================================
+           SEGURANÇA & PERSISTÊNCIA CRIPTOGRÁFICA LOCAL DO DIÁRIO
+           ========================================================================== */
+
+        // Função de Hash SHA-256 no navegador para segurança
+        async function sha256(str) {
+            const buffer = new TextEncoder().encode(str);
+            const hash = await crypto.subtle.digest('SHA-256', buffer);
+            return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        // Sanitização contra ataques XSS
+        function sanitize(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        const STORAGE_KEY = "diario_escolar_professora_v1";
+        const AUTH_KEY = "diario_escolar_auth_hash";
+
+        // Senha inicial padrão: "1234" (hash SHA-256)
+        const DEFAULT_HASH = "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4";
+
+        let db = {
+            alunos: [
+                { id: 1, numero: 1, nome: "Ana Carolina Silveira", ativo: 1 },
+                { id: 2, numero: 2, nome: "Bernardo Henrique Souza", ativo: 1 },
+                { id: 3, numero: 3, nome: "Camila Fernandes Lima", ativo: 1 },
+                { id: 4, numero: 4, nome: "Davi Lucas Ribeiro", ativo: 1 },
+                { id: 5, numero: 5, nome: "Eduardo Santos Costa", ativo: 1 },
+                { id: 6, numero: 6, nome: "Fernanda Gabrielle Martins", ativo: 1 },
+                { id: 7, numero: 7, nome: "Gabriel Alves Ferreira", ativo: 1 },
+                { id: 8, numero: 8, nome: "Helena Beatriz Rocha", ativo: 1 },
+                { id: 9, numero: 9, nome: "Igor Matheus Pereira", ativo: 1 },
+                { id: 10, numero: 10, nome: "Julia Vitoria Almeida", ativo: 1 },
+                { id: 11, numero: 11, nome: "Lucas Gabriel Ramos", ativo: 1 },
+                { id: 12, numero: 12, nome: "Manuela Cristina Dias", ativo: 1 },
+                { id: 13, numero: 13, nome: "Nicolas Eduardo Barbosa", ativo: 1 },
+                { id: 14, numero: 14, nome: "Olivia Mendes Prado", ativo: 1 },
+                { id: 15, numero: 15, nome: "Pedro Henrique Cardoso", ativo: 1 }
+            ],
+            materias: [
+                { id: 1, nome: "Língua Portuguesa", cor: "#1d4ed8" },
+                { id: 2, nome: "Matemática", cor: "#0284c7" },
+                { id: 3, nome: "Ciências", cor: "#059669" },
+                { id: 4, nome: "História", cor: "#d97706" },
+                { id: 5, nome: "Geografia", cor: "#4f46e5" },
+                { id: 6, nome: "Artes", cor: "#db2777" },
+                { id: 7, nome: "Educação Física", cor: "#16a34a" },
+                { id: 8, nome: "Inglês", cor: "#7c3aed" }
+            ],
+            aulas: [
+                {
+                    id: 1,
+                    data: "2026-10-18",
+                    materia_id: 2,
+                    conteudo: "Operações com frações com denominadores diferentes e resolução de problemas práticos.",
+                    obs: "Trabalho em duplas na apostila.",
+                    presencas: { 1: "presente", 2: "presente", 3: "falta", 4: "presente", 5: "presente", 6: "presente", 7: "presente", 8: "falta", 9: "presente", 10: "presente", 11: "presente", 12: "presente", 13: "presente", 14: "presente", 15: "presente" }
+                },
+                {
+                    id: 2,
+                    data: "2026-10-19",
+                    materia_id: 3,
+                    conteudo: "O Ciclo da Água na Natureza: evaporação, condensação, precipitação e infiltração.",
+                    obs: "Apresentação visual com vídeo explicativo.",
+                    presencas: { 1: "presente", 2: "presente", 3: "presente", 4: "presente", 5: "falta", 6: "presente", 7: "presente", 8: "presente", 9: "presente", 10: "presente", 11: "presente", 12: "presente", 13: "presente", 14: "presente", 15: "presente" }
+                },
+                {
+                    id: 3,
+                    data: "2026-10-20",
+                    materia_id: 1,
+                    conteudo: "Gênero textual: Crônica e figuras de linguagem no cotidiano.",
+                    obs: "Redação de crônica individual iniciada em sala.",
+                    presencas: { 1: "presente", 2: "presente", 3: "presente", 4: "falta", 5: "presente", 6: "presente", 7: "presente", 8: "presente", 9: "presente", 10: "presente", 11: "presente", 12: "falta", 13: "presente", 14: "presente", 15: "presente" }
+                }
+            ]
+        };
+
+        function carregarDados() {
+            try {
+                const salvo = localStorage.getItem(STORAGE_KEY);
+                if (salvo) {
+                    db = JSON.parse(salvo);
+                }
+            } catch (e) {
+                console.error("Erro ao ler localStorage", e);
+            }
+        }
+
+        function salvarDados() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+            } catch (e) {
+                mostrarAlerta("Erro ao salvar dados localmente. Memória cheia?", "danger");
+            }
+        }
+
+        // --- SISTEMA DE SENHA E BLOQUEIO ---
+
+        async function verificarSenha() {
+            const pinDigitado = document.getElementById("inputPin").value;
+            const hashDigitado = await sha256(pinDigitado);
+            const hashSalvo = localStorage.getItem(AUTH_KEY) || DEFAULT_HASH;
+
+            if (hashDigitado === hashSalvo) {
+                document.getElementById("lockScreen").style.display = "none";
+                document.getElementById("pinError").classList.add("d-none");
+                sessionStorage.setItem("diario_desbloqueado", "true");
+                atualizarInterface();
+            } else {
+                document.getElementById("pinError").classList.remove("d-none");
+            }
+        }
+
+        function bloquearTela() {
+            sessionStorage.removeItem("diario_desbloqueado");
+            document.getElementById("inputPin").value = "";
+            document.getElementById("pinError").classList.add("d-none");
+            document.getElementById("lockScreen").style.display = "flex";
+        }
+
+        async function alterarSenha() {
+            const atual = document.getElementById("senhaAtual").value;
+            const nova = document.getElementById("novaSenha").value;
+            const hashAtual = await sha256(atual);
+            const hashSalvo = localStorage.getItem(AUTH_KEY) || DEFAULT_HASH;
+
+            if (hashAtual !== hashSalvo) {
+                mostrarAlerta("Senha atual incorreta!", "danger");
+                return;
+            }
+
+            const novoHash = await sha256(nova);
+            localStorage.setItem(AUTH_KEY, novoHash);
+            document.getElementById("senhaAtual").value = "";
+            document.getElementById("novaSenha").value = "";
+            mostrarAlerta("Senha de segurança alterada com sucesso!", "success");
+        }
+
+        // --- NAVEGAÇÃO ENTRE ABAS ---
+
+        function mudarAba(nomeAba) {
+            document.querySelectorAll(".tab-content-section").forEach(sec => sec.classList.remove("active"));
+            document.querySelectorAll(".nav-link").forEach(link => link.classList.remove("active"));
+
+            const targetSection = document.getElementById("aba-" + nomeAba);
+            const targetNav = document.getElementById("nav-" + nomeAba);
+
+            if (targetSection) targetSection.classList.add("active");
+            if (targetNav) targetNav.classList.add("active");
+
+            // Fecha menu mobile após clique
+            const navMenu = document.getElementById("navMenu");
+            if (navMenu.classList.contains("show")) {
+                bootstrap.Collapse.getInstance(navMenu).hide();
+            }
+
+            atualizarInterface();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function mostrarAlerta(msg, tipo = "success") {
+            const alertContainer = document.getElementById("alertContainer");
+            alertContainer.innerHTML = `
+                <div class="alert alert-${tipo} alert-dismissible fade show shadow-sm rounded-3">
+                    <i class="bi bi-${tipo === 'success' ? 'check-circle' : 'exclamation-triangle'}-fill me-2"></i>
+                    ${sanitize(msg)}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            `;
+            setTimeout(() => { alertContainer.innerHTML = ""; }, 4000);
+        }
+
+        // --- ATUALIZAÇÃO GERAL DA INTERFACE ---
+
+        function atualizarInterface() {
+            // Contadores
+            document.getElementById("dashTotalAlunos").textContent = db.alunos.filter(a => a.ativo).length;
+            document.getElementById("dashTotalAulas").textContent = db.aulas.length;
+            document.getElementById("dashTotalMaterias").textContent = db.materias.length;
+            document.getElementById("badgeTotalAulas").textContent = `${db.aulas.length} Aulas`;
+
+            renderizarInicio();
+            renderizarFormularioAula();
+            renderizarTabelaAulas();
+            renderizarTabelaAlunos();
+            renderizarSelectAlunosHistorico();
+            renderizarTabelaMaterias();
+            renderizarEstatisticas();
+        }
+
+        // --- DASHBOARD INÍCIO ---
+        function renderizarInicio() {
+            // Últimas aulas
+            const listaAulasDiv = document.getElementById("listaUltimasAulas");
+            const ultimas = [...db.aulas].reverse().slice(0, 4);
+
+            if (ultimas.length === 0) {
+                listaAulasDiv.innerHTML = `<p class="text-muted text-center py-4">Nenhuma aula registrada ainda.</p>`;
+            } else {
+                listaAulasDiv.innerHTML = ultimas.map(a => {
+                    const mat = db.materias.find(m => m.id === a.materia_id) || { nome: "Geral", cor: "#2563eb" };
+                    const pres = Object.values(a.presencas).filter(s => s === "presente").length;
+                    const falt = Object.values(a.presencas).filter(s => s === "falta").length;
+                    return `
+                        <div class="border-bottom py-2">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="badge" style="background-color: ${mat.cor};">${sanitize(mat.nome)}</span>
+                                <small class="text-muted fw-bold">${a.data}</small>
+                            </div>
+                            <div class="small fw-semibold text-dark mb-1">${sanitize(a.conteudo)}</div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">
+                                    <span class="badge badge-presente"><i class="bi bi-check"></i> ${pres}</span>
+                                    <span class="badge badge-falta"><i class="bi bi-x"></i> ${falt}</span>
+                                </small>
+                                <button onclick="mudarAba('aulas')" class="btn btn-sm btn-link text-primary p-0">Ver &raquo;</button>
+                            </div>
+                        </div>
+                    `;
+                }).join("");
+            }
+
+            // Atalhos Alunos
+            const listaAlunosDiv = document.getElementById("listaAtalhosAlunos");
+            listaAlunosDiv.innerHTML = db.alunos.filter(a => a.ativo).map(al => `
+                <div class="d-flex justify-content-between align-items-center py-2 px-1 border-bottom">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="student-call-number">${al.numero}</span>
+                        <span class="fw-semibold text-dark small">${sanitize(al.nome)}</span>
+                    </div>
+                    <button class="btn btn-sm btn-outline-primary py-0 px-2" onclick="abrirHistoricoDe(${al.id})">
+                        Consultar
+                    </button>
+                </div>
+            `).join("");
+        }
+
+        // --- FORMULÁRIO DE NOVA AULA ---
+        function renderizarFormularioAula() {
+            // Data atual default
+            if (!document.getElementById("aulaData").value) {
+                document.getElementById("aulaData").value = new Date().toISOString().split('T')[0];
+            }
+
+            // Matérias no Select
+            const selectMat = document.getElementById("aulaMateria");
+            selectMat.innerHTML = db.materias.map(m => `<option value="${m.id}">${sanitize(m.nome)}</option>`).join("");
+
+            // Lista de alunos para chamada
+            const container = document.getElementById("containerChamadaAlunos");
+            const ativos = db.alunos.filter(a => a.ativo).sort((a,b) => a.numero - b.numero);
+
+            container.innerHTML = ativos.map(al => `
+                <div class="attendance-item">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="student-call-number">${al.numero}</span>
+                        <span class="fw-bold text-dark">${sanitize(al.nome)}</span>
+                    </div>
+                    <div class="attendance-options btn-group" role="group">
+                        <input type="radio" class="btn-check chamada-radio" name="chamada_${al.id}" id="p_${al.id}" value="presente" checked>
+                        <label class="btn btn-outline-success btn-sm fw-semibold" for="p_${al.id}">Presente</label>
+
+                        <input type="radio" class="btn-check chamada-radio" name="chamada_${al.id}" id="f_${al.id}" value="falta">
+                        <label class="btn btn-outline-danger btn-sm fw-semibold" for="f_${al.id}">Falta</label>
+
+                        <input type="radio" class="btn-check chamada-radio" name="chamada_${al.id}" id="j_${al.id}" value="justificada">
+                        <label class="btn btn-outline-warning text-dark btn-sm fw-semibold" for="j_${al.id}">Justificada</label>
+                    </div>
+                </div>
+            `).join("");
+        }
+
+        function marcarChamadaTodos(status) {
+            document.querySelectorAll(".chamada-radio").forEach(radio => {
+                if (radio.value === status) radio.checked = true;
+            });
+        }
+
+        function salvarNovaAula() {
+            const data = document.getElementById("aulaData").value;
+            const matId = parseInt(document.getElementById("aulaMateria").value);
+            const conteudo = document.getElementById("aulaConteudo").value.trim();
+            const obs = document.getElementById("aulaObs").value.trim();
+
+            if (!conteudo) {
+                mostrarAlerta("Preencha o conteúdo da aula!", "danger");
+                return;
+            }
+
+            const presencas = {};
+            db.alunos.filter(a => a.ativo).forEach(al => {
+                const radio = document.querySelector(`input[name="chamada_${al.id}"]:checked`);
+                presencas[al.id] = radio ? radio.value : "presente";
+            });
+
+            const novaAula = {
+                id: Date.now(),
+                data,
+                materia_id: matId,
+                conteudo,
+                obs,
+                presencas
+            };
+
+            db.aulas.push(novaAula);
+            salvarDados();
+
+            // Limpa form
+            document.getElementById("aulaConteudo").value = "";
+            document.getElementById("aulaObs").value = "";
+            marcarChamadaTodos("presente");
+
+            mostrarAlerta("Aula e chamada registradas com sucesso no Diário!", "success");
+            mudarAba("aulas");
+        }
+
+        // --- TABELA DE AULAS ---
+        function renderizarTabelaAulas() {
+            const container = document.getElementById("tabelaAulasContainer");
+            if (db.aulas.length === 0) {
+                container.innerHTML = `<p class="text-muted text-center py-4">Nenhuma aula registrada.</p>`;
+                return;
+            }
+
+            const lista = [...db.aulas].reverse();
+            container.innerHTML = `
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Data</th>
+                                <th>Matéria</th>
+                                <th>Conteúdo Aprendido</th>
+                                <th class="text-center">Presenças</th>
+                                <th class="text-end">Ação</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${lista.map(a => {
+                                const mat = db.materias.find(m => m.id === a.materia_id) || { nome: "Geral", cor: "#2563eb" };
+                                const pres = Object.values(a.presencas).filter(s => s === "presente").length;
+                                const falt = Object.values(a.presencas).filter(s => s === "falta").length;
+                                return `
+                                    <tr>
+                                        <td class="fw-bold">${a.data}</td>
+                                        <td><span class="badge rounded-pill text-white px-2 py-1" style="background-color: ${mat.cor};">${sanitize(mat.nome)}</span></td>
+                                        <td>
+                                            <div class="fw-semibold text-dark">${sanitize(a.conteudo)}</div>
+                                            ${a.obs ? `<div class="small text-muted fst-italic">${sanitize(a.obs)}</div>` : ''}
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="badge badge-presente me-1">${pres} P</span>
+                                            <span class="badge badge-falta">${falt} F</span>
+                                        </td>
+                                        <td class="text-end">
+                                            <button onclick="excluirAula(${a.id})" class="btn btn-sm btn-outline-danger" title="Excluir Aula"><i class="bi bi-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                `;
+                            }).join("")}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        function excluirAula(id) {
+            if (confirm("Deseja realmente excluir este registro de aula?")) {
+                db.aulas = db.aulas.filter(a => a.id !== id);
+                salvarDados();
+                atualizarInterface();
+                mostrarAlerta("Aula removida com sucesso.", "info");
+            }
+        }
+
+        // --- ALUNOS ---
+        function renderizarTabelaAlunos() {
+            const container = document.getElementById("tabelaAlunosContainer");
+            container.innerHTML = `
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width: 70px;">Nº</th>
+                                <th>Nome Completo</th>
+                                <th style="width: 220px;" class="text-end">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${db.alunos.sort((a,b) => a.numero - b.numero).map(al => `
+                                <tr>
+                                    <td><span class="student-call-number">${al.numero}</span></td>
+                                    <td class="fw-bold text-dark">${sanitize(al.nome)}</td>
+                                    <td class="text-end">
+                                        <button class="btn btn-sm btn-outline-primary me-1" onclick="abrirHistoricoDe(${al.id})"><i class="bi bi-journal-text"></i> Histórico</button>
+                                        <button class="btn btn-sm btn-outline-secondary me-1" onclick="abrirModalEdicaoAluno(${al.id})"><i class="bi bi-pencil"></i></button>
+                                        <button class="btn btn-sm btn-outline-danger" onclick="excluirAluno(${al.id})"><i class="bi bi-trash"></i></button>
+                                    </td>
+                                </tr>
+                            `).join("")}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        function abrirModalEdicaoAluno(id) {
+            const al = db.alunos.find(a => a.id === id);
+            if (!al) return;
+            document.getElementById("editAlunoId").value = al.id;
+            document.getElementById("editAlunoNumero").value = al.numero;
+            document.getElementById("editAlunoNome").value = al.nome;
+            new bootstrap.Modal(document.getElementById("modalEditarAluno")).show();
+        }
+
+        function salvarEdicaoAluno() {
+            const id = parseInt(document.getElementById("editAlunoId").value);
+            const numero = parseInt(document.getElementById("editAlunoNumero").value);
+            const nome = document.getElementById("editAlunoNome").value.trim();
+            if (!nome) return;
+
+            const al = db.alunos.find(a => a.id === id);
+            if (al) {
+                al.numero = numero;
+                al.nome = nome;
+                salvarDados();
+                atualizarInterface();
+                bootstrap.Modal.getInstance(document.getElementById("modalEditarAluno")).hide();
+                mostrarAlerta("Aluno atualizado com sucesso!");
+            }
+        }
+
+        function adicionarAluno() {
+            const numero = parseInt(document.getElementById("novoAlunoNumero").value);
+            const nome = document.getElementById("novoAlunoNome").value.trim();
+            if (!nome) return;
+
+            const novoId = Date.now();
+            db.alunos.push({ id: novoId, numero, nome, ativo: 1 });
+            salvarDados();
+            atualizarInterface();
+
+            document.getElementById("novoAlunoNome").value = "";
+            bootstrap.Modal.getInstance(document.getElementById("modalNovoAluno")).hide();
+            mostrarAlerta("Novo aluno cadastrado com sucesso!");
+        }
+
+        function excluirAluno(id) {
+            if (confirm("Tem certeza que deseja excluir este aluno?")) {
+                db.alunos = db.alunos.filter(a => a.id !== id);
+                salvarDados();
+                atualizarInterface();
+                mostrarAlerta("Aluno removido.", "info");
+            }
+        }
+
+        // --- HISTÓRICO INDIVIDUAL ---
+        function renderizarSelectAlunosHistorico() {
+            const select = document.getElementById("selectAlunoHistorico");
+            const atual = select.value;
+            select.innerHTML = db.alunos.sort((a,b) => a.numero - b.numero).map(al => `
+                <option value="${al.id}" ${atual == al.id ? 'selected' : ''}>Nº ${al.numero} - ${sanitize(al.nome)}</option>
+            `).join("");
+
+            if (select.value) {
+                renderizarHistoricoAluno(select.value);
+            }
+        }
+
+        function abrirHistoricoDe(alunoId) {
+            mudarAba("historico");
+            document.getElementById("selectAlunoHistorico").value = alunoId;
+            renderizarHistoricoAluno(alunoId);
+        }
+
+        function renderizarHistoricoAluno(alunoId) {
+            const id = parseInt(alunoId);
+            const al = db.alunos.find(a => a.id === id);
+            if (!al) return;
+
+            const historico = [];
+            db.aulas.forEach(aula => {
+                if (aula.presencas && aula.presencas[id]) {
+                    const mat = db.materias.find(m => m.id === aula.materia_id) || { nome: "Geral", cor: "#2563eb" };
+                    historico.push({
+                        data: aula.data,
+                        materia: mat.nome,
+                        cor: mat.cor,
+                        conteudo: aula.conteudo,
+                        status: aula.presencas[id]
+                    });
+                }
+            });
+
+            const total = historico.length;
+            const pres = historico.filter(h => h.status === "presente").length;
+            const falt = historico.filter(h => h.status === "falta").length;
+            const jus = historico.filter(h => h.status === "justificada").length;
+            const pct = total === 0 ? 100 : Math.round((pres / total) * 100);
+
+            const div = document.getElementById("detalhesAlunoHistorico");
+            div.innerHTML = `
+                <div class="card-custom p-3 p-md-4 mb-4">
+                    <div class="row align-items-center g-3">
+                        <div class="col-md-5">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="student-call-number" style="width: 50px; height: 50px; font-size: 1.3rem;">${al.numero}</div>
+                                <div>
+                                    <h4 class="fw-bold mb-0">${sanitize(al.nome)}</h4>
+                                    <span class="badge bg-success-subtle text-success">Aluno Ativo</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-7">
+                            <div class="row text-center g-2 mb-2">
+                                <div class="col-3"><div class="p-2 bg-light rounded border"><div class="fs-4 fw-bold text-primary">${total}</div><small class="text-muted">Aulas</small></div></div>
+                                <div class="col-3"><div class="p-2 bg-light rounded border"><div class="fs-4 fw-bold text-success">${pres}</div><small class="text-muted">Presenças</small></div></div>
+                                <div class="col-3"><div class="p-2 bg-light rounded border"><div class="fs-4 fw-bold text-danger">${falt}</div><small class="text-muted">Faltas</small></div></div>
+                                <div class="col-3"><div class="p-2 bg-light rounded border"><div class="fs-4 fw-bold text-warning">${jus}</div><small class="text-muted">Justif.</small></div></div>
+                            </div>
+                            <div class="d-flex justify-content-between small fw-semibold mb-1">
+                                <span>Frequência Escolar:</span>
+                                <span class="${pct < 75 ? 'text-danger fw-bold' : 'text-success'}">${pct}%</span>
+                            </div>
+                            <div class="freq-progress">
+                                <div class="freq-bar ${pct < 75 ? 'bg-danger' : (pct < 85 ? 'bg-warning' : 'bg-success')}" style="width: ${pct}%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-custom">
+                    <div class="card-header-blue">Aulas e Conteúdos Aprendidos</div>
+                    <div class="p-3">
+                        ${historico.length === 0 ? '<p class="text-muted text-center py-3">Nenhum registro para este aluno.</p>' : `
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Data</th>
+                                            <th>Matéria</th>
+                                            <th>Conteúdo Aprendido</th>
+                                            <th class="text-center">Presença</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${historico.reverse().map(h => `
+                                            <tr>
+                                                <td class="fw-bold">${h.data}</td>
+                                                <td><span class="badge rounded-pill text-white" style="background-color: ${h.cor}">${sanitize(h.materia)}</span></td>
+                                                <td>${sanitize(h.conteudo)}</td>
+                                                <td class="text-center">
+                                                    <span class="badge badge-${h.status} px-3 py-1 text-capitalize">${h.status}</span>
+                                                </td>
+                                            </tr>
+                                        `).join("")}
+                                    </tbody>
+                                </table>
+                            </div>
+                        `}
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- MATÉRIAS ---
+        function renderizarTabelaMaterias() {
+            const container = document.getElementById("tabelaMateriasContainer");
+            container.innerHTML = `
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Nome da Disciplina</th>
+                                <th>Cor</th>
+                                <th class="text-end">Ação</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${db.materias.map(m => `
+                                <tr>
+                                    <td class="fw-bold">${sanitize(m.nome)}</td>
+                                    <td><span class="badge rounded-pill text-white px-3 py-1" style="background-color: ${m.cor}">${sanitize(m.nome)}</span></td>
+                                    <td class="text-end">
+                                        <button onclick="excluirMateria(${m.id})" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                                    </td>
+                                </tr>
+                            `).join("")}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        function adicionarMateria() {
+            const nome = document.getElementById("novaMateriaNome").value.trim();
+            const cor = document.getElementById("novaMateriaCor").value;
+            if (!nome) return;
+
+            db.materias.push({ id: Date.now(), nome, cor });
+            salvarDados();
+            atualizarInterface();
+            document.getElementById("novaMateriaNome").value = "";
+            mostrarAlerta("Matéria adicionada com sucesso!");
+        }
+
+        function excluirMateria(id) {
+            if (confirm("Deseja realmente excluir esta matéria?")) {
+                db.materias = db.materias.filter(m => m.id !== id);
+                salvarDados();
+                atualizarInterface();
+                mostrarAlerta("Matéria removida.", "info");
+            }
+        }
+
+        // --- ESTATÍSTICAS ---
+        function renderizarEstatisticas() {
+            // Aulas por matéria
+            const divAulasMat = document.getElementById("statsAulasPorMateria");
+            const contagem = {};
+            db.materias.forEach(m => contagem[m.id] = 0);
+            db.aulas.forEach(a => { if (contagem[a.materia_id] !== undefined) contagem[a.materia_id]++; });
+
+            divAulasMat.innerHTML = db.materias.map(m => {
+                const total = contagem[m.id] || 0;
+                const pct = db.aulas.length === 0 ? 0 : Math.round((total / db.aulas.length) * 100);
+                return `
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="badge rounded-pill text-white" style="background-color: ${m.cor}">${sanitize(m.nome)}</span>
+                            <span class="fw-bold text-primary small">${total} aulas (${pct}%)</span>
+                        </div>
+                        <div class="freq-progress">
+                            <div class="freq-bar" style="width: ${pct}%; background-color: ${m.cor};"></div>
+                        </div>
+                    </div>
+                `;
+            }).join("");
+
+            // Panorama Geral
+            const divResumo = document.getElementById("statsResumoGeral");
+            divResumo.innerHTML = `
+                <div class="row g-3 text-center mb-3">
+                    <div class="col-4"><div class="p-3 bg-light rounded border"><div class="fs-3 fw-bold text-primary">${db.alunos.length}</div><small class="text-muted fw-bold">Alunos</small></div></div>
+                    <div class="col-4"><div class="p-3 bg-light rounded border"><div class="fs-3 fw-bold text-success">${db.aulas.length}</div><small class="text-muted fw-bold">Aulas Dadas</small></div></div>
+                    <div class="col-4"><div class="p-3 bg-light rounded border"><div class="fs-3 fw-bold text-info">${db.materias.length}</div><small class="text-muted fw-bold">Disciplinas</small></div></div>
+                </div>
+                <div class="alert alert-info small mb-0">
+                    <i class="bi bi-shield-check me-1"></i> Seus dados estão salvos e sincronizados localmente no seu navegador. Lembre-se de baixar um backup regularmente na aba Segurança.
+                </div>
+            `;
+
+            // Tabela geral de frequência
+            const divTabFreq = document.getElementById("statsTabelaFrequencia");
+            divTabFreq.innerHTML = `
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width: 60px;">Nº</th>
+                                <th>Nome do Aluno</th>
+                                <th class="text-center">Presenças</th>
+                                <th class="text-center">Faltas</th>
+                                <th>% Frequência</th>
+                                <th class="text-end">Ação</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${db.alunos.sort((a,b) => a.numero - b.numero).map(al => {
+                                let pres = 0, falt = 0, total = 0;
+                                db.aulas.forEach(a => {
+                                    if (a.presencas && a.presencas[al.id]) {
+                                        total++;
+                                        if (a.presencas[al.id] === "presente") pres++;
+                                        if (a.presencas[al.id] === "falta") falt++;
+                                    }
+                                });
+                                const pct = total === 0 ? 100 : Math.round((pres / total) * 100);
+                                return `
+                                    <tr>
+                                        <td><span class="student-call-number">${al.numero}</span></td>
+                                        <td class="fw-bold">${sanitize(al.nome)}</td>
+                                        <td class="text-center"><span class="badge badge-presente">${pres}</span></td>
+                                        <td class="text-center"><span class="badge badge-falta">${falt}</span></td>
+                                        <td>
+                                            <div class="d-flex align-items-center gap-2">
+                                                <div class="freq-progress flex-grow-1">
+                                                    <div class="freq-bar ${pct < 75 ? 'bg-danger' : (pct < 85 ? 'bg-warning' : 'bg-success')}" style="width: ${pct}%;"></div>
+                                                </div>
+                                                <span class="small fw-bold ${pct < 75 ? 'text-danger' : 'text-dark'}">${pct}%</span>
+                                            </div>
+                                        </td>
+                                        <td class="text-end">
+                                            <button onclick="abrirHistoricoDe(${al.id})" class="btn btn-sm btn-outline-primary py-0 px-2">Ver</button>
+                                        </td>
+                                    </tr>
+                                `;
+                            }).join("")}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        // --- BACKUP E RESTAURAÇÃO ---
+
+        function baixarBackup() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db, null, 2));
+            const dlAnchor = document.createElement('a');
+            const dataHoje = new Date().toISOString().split('T')[0];
+            dlAnchor.setAttribute("href", dataStr);
+            dlAnchor.setAttribute("download", `diario_escolar_backup_${dataHoje}.json`);
+            dlAnchor.click();
+            mostrarAlerta("Backup baixado com sucesso! Guarde este arquivo em segurança.", "success");
+        }
+
+        function restaurarBackup() {
+            const fileInput = document.getElementById("arquivoBackup");
+            if (!fileInput.files.length) {
+                mostrarAlerta("Por favor, selecione um arquivo de backup (.json).", "danger");
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const dadosImportados = JSON.parse(e.target.result);
+                    if (dadosImportados.alunos && dadosImportados.materias && dadosImportados.aulas) {
+                        db = dadosImportados;
+                        salvarDados();
+                        atualizarInterface();
+                        mostrarAlerta("Backup restaurado com sucesso!", "success");
+                    } else {
+                        mostrarAlerta("Formato de backup inválido!", "danger");
+                    }
+                } catch (err) {
+                    mostrarAlerta("Erro ao ler o arquivo de backup.", "danger");
+                }
+            };
+            reader.readAsText(fileInput.files[0]);
+        }
+
+        // Inicialização ao carregar a página
+        window.addEventListener("DOMContentLoaded", () => {
+            carregarDados();
+            if (sessionStorage.getItem("diario_desbloqueado") === "true") {
+                document.getElementById("lockScreen").style.display = "none";
+                atualizarInterface();
+            }
+        });
+    </script>
+</body>
+</html>
