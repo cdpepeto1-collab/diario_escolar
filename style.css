@@ -1,0 +1,314 @@
+/* 
+   Estilos personalizados - Diário Escolar da Professora 
+   Paleta: Azul & Branco moderno, 100% responsivo (Mobile & Windows)
+*/
+
+:root {
+    --primary-blue: #1e40af;       /* Azul profundo/royal */
+    --primary-hover: #1d4ed8;
+    --secondary-blue: #3b82f6;     /* Azul padrão */
+    --light-blue: #eff6ff;         /* Azul bem suave para fundos */
+    --accent-blue: #0284c7;        /* Azul oceano */
+    --cyan-soft: #e0f2fe;
+    --text-dark: #1e293b;
+    --text-muted: #64748b;
+    --border-color: #e2e8f0;
+    --white: #ffffff;
+    --presente-color: #16a34a;
+    --falta-color: #dc2626;
+    --justificada-color: #d97706;
+}
+
+body {
+    background-color: #f8fafc;
+    color: var(--text-dark);
+    font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Navbar Azul Elegante */
+.navbar-custom {
+    background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+    box-shadow: 0 4px 12px rgba(30, 58, 138, 0.15);
+    padding: 0.8rem 1rem;
+}
+
+.navbar-custom .navbar-brand {
+    color: #ffffff !important;
+    font-weight: 700;
+    font-size: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-custom .nav-link {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-weight: 500;
+    padding: 0.5rem 0.85rem !important;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.navbar-custom .nav-link:hover,
+.navbar-custom .nav-link.active {
+    color: #ffffff !important;
+    background-color: rgba(255, 255, 255, 0.18);
+}
+
+/* Banner de boas-vindas / Hero */
+.hero-card {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 50%, #1e40af 100%);
+    color: var(--white);
+    border-radius: 16px;
+    padding: 1.75rem;
+    box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.25);
+    margin-bottom: 1.5rem;
+}
+
+.hero-card h1 {
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+/* Cards Modernos */
+.card-custom {
+    background: var(--white);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.03);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-custom:hover {
+    box-shadow: 0 10px 15px -3px rgba(30, 58, 138, 0.08);
+}
+
+.card-header-blue {
+    background-color: var(--light-blue);
+    border-bottom: 1px solid #bfdbfe;
+    color: var(--primary-blue);
+    font-weight: 700;
+    padding: 0.9rem 1.25rem;
+    border-top-left-radius: 13px !important;
+    border-top-right-radius: 13px !important;
+}
+
+/* Stat Cards */
+.stat-card {
+    background: var(--white);
+    border-radius: 14px;
+    border: 1px solid #e2e8f0;
+    padding: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.04);
+}
+
+.stat-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    background: var(--light-blue);
+    color: var(--primary-blue);
+}
+
+.stat-number {
+    font-size: 1.65rem;
+    font-weight: 700;
+    color: var(--primary-blue);
+    line-height: 1.1;
+}
+
+.stat-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Botões */
+.btn-primary-custom {
+    background-color: var(--primary-blue);
+    color: var(--white);
+    border: none;
+    font-weight: 600;
+    padding: 0.6rem 1.2rem;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+}
+
+.btn-primary-custom:hover {
+    background-color: var(--primary-hover);
+    color: var(--white);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(30, 64, 175, 0.3);
+}
+
+.btn-outline-blue {
+    color: var(--primary-blue);
+    border: 2px solid var(--primary-blue);
+    background: transparent;
+    font-weight: 600;
+    border-radius: 10px;
+}
+
+.btn-outline-blue:hover {
+    background-color: var(--light-blue);
+    color: var(--primary-hover);
+    border-color: var(--primary-hover);
+}
+
+/* Lista de Presença - Otimizada para Mobile e Desktop */
+.attendance-item {
+    background: var(--white);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 0.85rem 1rem;
+    margin-bottom: 0.65rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    transition: background-color 0.15s ease;
+}
+
+.attendance-item:hover {
+    background-color: #f8fafc;
+}
+
+.student-call-number {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: var(--light-blue);
+    color: var(--primary-blue);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+}
+
+.attendance-options {
+    display: flex;
+    gap: 0.35rem;
+}
+
+.btn-status-radio {
+    font-size: 0.85rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 8px;
+    font-weight: 600;
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+/* Badges de Status */
+.badge-presente {
+    background-color: #dcfce7;
+    color: #15803d;
+    font-weight: 600;
+    border: 1px solid #bbf7d0;
+}
+
+.badge-falta {
+    background-color: #fee2e2;
+    color: #b91c1c;
+    font-weight: 600;
+    border: 1px solid #fecaca;
+}
+
+.badge-justificada {
+    background-color: #fef3c7;
+    color: #b45309;
+    font-weight: 600;
+    border: 1px solid #fde68a;
+}
+
+/* Badge de Matéria */
+.badge-materia {
+    font-weight: 600;
+    padding: 0.35rem 0.65rem;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Barra de Progresso de Frequência */
+.freq-progress {
+    height: 10px;
+    border-radius: 5px;
+    background-color: #e2e8f0;
+    overflow: hidden;
+}
+
+.freq-bar {
+    height: 100%;
+    border-radius: 5px;
+    transition: width 0.4s ease;
+}
+
+/* Rodapé */
+footer {
+    margin-top: auto;
+    background-color: #ffffff;
+    border-top: 1px solid var(--border-color);
+    padding: 1rem 0;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+/* Mobile Quick Access Bar no fundo (opcional no mobile) */
+@media (max-width: 768px) {
+    .hero-card {
+        padding: 1.25rem;
+    }
+    
+    .hero-card h1 {
+        font-size: 1.35rem;
+    }
+    
+    .stat-card {
+        padding: 0.9rem;
+    }
+    
+    .stat-icon {
+        width: 44px;
+        height: 44px;
+        font-size: 1.25rem;
+    }
+    
+    .stat-number {
+        font-size: 1.35rem;
+    }
+
+    .attendance-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .attendance-options {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        margin-top: 0.5rem;
+    }
+
+    .btn-status-radio {
+        text-align: center;
+        padding: 0.5rem 0.2rem;
+        font-size: 0.8rem;
+    }
+}
